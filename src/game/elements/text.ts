@@ -5,6 +5,9 @@ export const createText = (text: string, x: number, y: number, color: string, op
   type: "text",
   x,
   y,
+  ...(options?.ttl && {
+    deleteAt: Date.now() + options.ttl
+  }),
   metadata: {
     text,
     color,

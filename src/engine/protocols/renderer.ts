@@ -18,6 +18,7 @@ export interface ITextOptions {
   fontSize?: number;
   outline?: boolean;
   align?: string;
+  ttl?: number;
 }
 
 export interface IRenderer {

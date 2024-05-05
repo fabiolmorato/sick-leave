@@ -18,7 +18,8 @@ export class YogaEntity extends Entity {
   effect () {
     return {
       type: "health",
-      amount: 5
+      amount: 5,
+      text: "Did some yoga! +5"
     };
   }
 }

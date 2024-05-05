@@ -13,6 +13,8 @@ import { LogoElementRenderer } from "./renderers/logo-renderer.js";
 import { PlayerEntityRenderer } from "./renderers/player-renderer.js";
 import { CactusRenderer } from "./renderers/cactus-renderer.js";
 import { YogaRenderer } from "./renderers/yoga-renderer.js";
+import { BeeRenderer } from "./renderers/bee-renderer.js";
+import { VitaminPillRenderer } from "./renderers/vitamin-pill-renderer.js";
 
 import { LoadingScene } from "./scenes/loading.js";
 import { StartMenuScene } from "./scenes/start-menu.js";
@@ -70,6 +72,8 @@ export class Game {
     this.engine.addEntityRenderer("player", new PlayerEntityRenderer());
     this.engine.addEntityRenderer("cactus", new CactusRenderer());
     this.engine.addEntityRenderer("yoga", new YogaRenderer());
+    this.engine.addEntityRenderer("bee", new BeeRenderer());
+    this.engine.addEntityRenderer("vitamin-pill", new VitaminPillRenderer());
 
     const loadingScene = new LoadingScene();
     const startMenuScene = new StartMenuScene();

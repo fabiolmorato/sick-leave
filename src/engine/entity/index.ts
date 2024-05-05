@@ -7,6 +7,7 @@ export abstract class Entity extends EventEmitter {
   protected width: number = 0;
   protected height: number = 0;
   protected collidable = true;
+  protected deleteAt: number = Infinity;
 
   public abstract getType (): string;
   public tick () {}
@@ -63,5 +64,13 @@ export abstract class Entity extends EventEmitter {
       width: this.width,
       height: this.height
     };
+  }
+
+  public setTTL (ttl: number) {
+    this.deleteAt = Date.now() + ttl;
+  }
+
+  public getDeleteAt () {
+    return this.deleteAt;
   }
 }

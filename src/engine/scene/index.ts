@@ -26,6 +26,7 @@ export abstract class Scene extends EventEmitter {
   public render (renderer: IRenderer, getElementRenderer: TGetElementRenderer, getEntityRenderer: TGetEntityRenderer) {
     const [width] = renderer.getDimensions();
     const furthestHorizontalRenderedPoint = this.getFurthestHorizontalRenderedPoint();
+    const now = Date.now();
     
     for (const layer of this.layers) {
       if (layer.hidden) continue;
@@ -35,6 +36,7 @@ export abstract class Scene extends EventEmitter {
       if (layer.elements) {
         for (const element of layer.elements) {
           if (element.hide) continue;
+          if (element.deleteAt && element.deleteAt < now) continue;
     
           const elementRenderer = getElementRenderer(element.type);
           elementRenderer.render(renderer, element, {
@@ -58,6 +60,8 @@ export abstract class Scene extends EventEmitter {
         }
       }
     }
+
+    this.cleanup();
   }
 
   protected getFurthestHorizontalRenderedPoint () {
@@ -87,5 +91,18 @@ export abstract class Scene extends EventEmitter {
 
   public getLayers () {
     return this.layers;
+  }
+
+  protected cleanup () {
+    const now = Date.now();
+    for (const layer of this.layers) {
+      if (layer.elements) {
+        layer.elements = layer.elements.filter((element) => !(element.deleteAt && element.deleteAt <= now));
+      }
+
+      if (layer.entities) {
+        layer.entities = layer.entities.filter((entity) => !(entity.getDeleteAt() && entity.getDeleteAt() <= now));
+      }
+    }
   }
 }

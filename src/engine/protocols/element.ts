@@ -11,6 +11,7 @@ export interface IElement {
   height?: number | string;
 
   hide?: boolean;
+  deleteAt?: number;
 
   metadata: IElementMetadata;
 }

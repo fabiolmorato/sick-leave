@@ -73,12 +73,15 @@ export class PlayerEntity extends Entity {
     this.velocityY = 0;
   }
 
-  public correctPosition (x: number, y: number) {
+  public correctPosition (x: number, y: number, options?: {
+    keepVelocityX?: boolean;
+    keepVelocityY?: boolean;
+  }) {
     this.x = x;
     this.y = y;
 
-    this.velocityX = 0;
-    this.velocityY = 0;
+    if (!options?.keepVelocityX) this.velocityX = 0;
+    if (!options?.keepVelocityY) this.velocityY = 0;
   }
 
   public stop () {
@@ -92,5 +95,13 @@ export class PlayerEntity extends Entity {
 
   public getTicks () {
     return this.ticks % 9;
+  }
+
+  public getVelocityX () {
+    return this.velocityX;
+  }
+
+  public getVelocityY () {
+    return this.velocityY;
   }
 }

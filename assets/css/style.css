@@ -4,6 +4,7 @@
 
 body {
   background-color: rgb(40, 213, 81);
+  padding: 1rem;
 }
 
 .app {
@@ -40,8 +41,8 @@ body {
 }
 
 button {
-  width: 36px;
-  height: 36px;
+  width: 60px;
+  height: 60px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -57,6 +58,9 @@ canvas {
   margin-bottom: 1rem;
   border-radius: 0.25rem;
   border: 1px solid rgba(0, 0, 0, .3);
+  width: 100%;
+  max-width: 600px;
+  aspect-ratio: 4/3;
 }
 
 .controls {
@@ -64,12 +68,36 @@ canvas {
   align-items: center;
   justify-content: space-between;
   padding: 1rem;
+  user-select: none;
 }
 
 .controls .direction {
   width: 18%;
+  min-width: 180px;
 }
 
 .controls .state, .controls .actions {
   gap: 1rem;
+  flex-wrap: wrap;
+}
+
+@media screen and (max-width: 640px) {
+  .controls {
+    padding: 0;
+    gap: 1rem;
+  }
+
+  .controls .direction {
+    min-width: 140px;
+  }
+
+  .controls .direction :first-child button, .controls .direction :last-child button {
+    width: 30px;
+    height: 30px;
+  }
+
+  .controls .state button {
+    width: 30px;
+    height: 30px;
+  }
 }

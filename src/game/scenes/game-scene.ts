@@ -5,6 +5,8 @@ import { createRectangle } from "../elements/rectangle.js";
 import { PlayerEntity } from "../entities/player.js";
 import { CactusEntity } from "../entities/cactus.js";
 import { YogaEntity } from "../entities/yoga.js";
+import { BeeEntity } from "../entities/bee.js";
+import { VitaminPillEntity } from "../entities/vitamin-pill.js";
 
 interface IColumn {
   columnId: number;
@@ -16,9 +18,11 @@ export class GameScene extends Scene {
   private columns: IColumn[] = [];
   private healthPoints = 0;
   private healthUpdateInterval: ReturnType<typeof setInterval> | null = null;
+  private daysUpdateInterval: ReturnType<typeof setInterval> | null = null;
   private columnCorrection = 0;
   private playerDirection: "left" | "right" | "none" = "none";
   private jumping = false;
+  private daysPassed = 0;
 
   constructor () {
     super();
@@ -60,9 +64,11 @@ export class GameScene extends Scene {
       elements: [
         createText("Health", 50, 88, "black", { fontSize: 48 }),
         createRectangle(250, 50, 800, 50, "black", { filled: false, border: { width: 4, color: "black" } }),
-        createRectangle(254, 54, 0, 42, "red")
+        createRectangle(254, 54, 0, 42, "red"),
+        createText("0 days", 1100, 88, "black", { fontSize: 36 })
       ]
     }, {
+      elements: [],
       entities: [
         new CactusEntity(520, 702)
       ],
@@ -78,6 +84,8 @@ export class GameScene extends Scene {
     this.updateHealthBar();
     this.generateMap();
     this.handleConsumableCollision();
+    this.correctVitaminPillPosition();
+    this.updateDaysPassedText();
     this.playerDirection = "none";
   }
 
@@ -108,12 +116,25 @@ export class GameScene extends Scene {
       if (this.healthPoints < 255) {
         this.healthPoints++;
       }
-    }, 250);
+    }, 400);
+
+    this.daysUpdateInterval = setInterval(() => {
+      if (this.healthPoints < 255) {
+        this.daysPassed++;
+      }
+    }, 3000);
+
+    this.daysPassed = 0;
+    this.healthPoints = 0;
   }
 
   public onLeave() {
     if (this.healthUpdateInterval) {
       clearInterval(this.healthUpdateInterval);
+    }
+
+    if (this.daysUpdateInterval) {
+      clearInterval(this.daysUpdateInterval);
     }
   }
 
@@ -129,7 +150,7 @@ export class GameScene extends Scene {
         this.player.getX() < block.x &&
         this.player.getY() + this.player.getHeight() > block.y + 50
       ) {
-        this.player.correctPosition(block.x - this.player.getWidth() - 1, this.player.getY());
+        this.player.correctPosition(block.x - this.player.getWidth() - 1, this.player.getY(), { keepVelocityY: true });
       }
 
       if (
@@ -137,13 +158,14 @@ export class GameScene extends Scene {
         this.player.getX() > block.x &&
         this.player.getY() + this.player.getHeight() > block.y + 50
       ) {
-        this.player.correctPosition(block.x + (block.width as number) + 1, this.player.getY());
+        this.player.correctPosition(block.x + (block.width as number) + 1, this.player.getY(), { keepVelocityY: true });
       }
       
       if (
         this.player.getY() + this.player.getHeight() > block.y &&
         this.player.getX() < block.x + (block.width as number) &&
-        this.player.getX() + this.player.getWidth() > block.x
+        this.player.getX() + this.player.getWidth() > block.x &&
+        this.player.getVelocityY() > 0
       ) {
         this.player.correctPosition(this.player.getX(), block.y - this.player.getHeight());
         this.jumping = false;
@@ -159,6 +181,39 @@ export class GameScene extends Scene {
     }
   }
 
+  private correctVitaminPillPosition () {
+    if (this.layers[1]?.elements && this.layers[3]?.entities) {
+      for (const block of this.layers[1].elements) {
+        for (const entity of this.layers[3]?.entities) {
+          if (entity instanceof VitaminPillEntity) {
+            if (
+              entity.getX() < block.x + (block.width as number) &&
+              entity.getX() > block.x &&
+              entity.getY() + entity.getHeight() > block.y + 50
+            ) {
+              entity.hitLeft(block.x + (block.width as number));
+            }
+
+            // check floor
+            if (
+              entity.getY() + entity.getHeight() > block.y &&
+              entity.getX() < block.x + (block.width as number) &&
+              entity.getX() + entity.getWidth() > block.x
+            ) {
+              entity.hitFloor(block.y);
+            }
+          }
+        }
+      }
+    }
+  }
+
+  private updateDaysPassedText () {
+    if (this.layers[2].elements && this.layers[2].elements[3]) {
+      this.layers[2].elements[3].metadata.text = `${this.daysPassed} days`;
+    }
+  }
+
   private handleConsumableCollision () {
     const closeConsumables = this.layers[3].entities?.filter(entity => entity.getX() <= this.player.getX() + 100 && entity.getX() >= this.player.getX() - 100) || [];
     for (const consumable of closeConsumables) {
@@ -167,6 +222,9 @@ export class GameScene extends Scene {
           const effect = consumable.effect();
           if (effect.type === "health") {
             this.healthPoints = Math.max(Math.min(this.healthPoints + effect.amount, 255), 0);
+            this.layers[3].elements?.push(
+              createText(effect.text, this.player.getX(), this.player.getY() - 50, "black", { fontSize: 36, align: "center", ttl: 2500 })
+            );
           }
         }
 
@@ -247,12 +305,28 @@ export class GameScene extends Scene {
       if (Math.random() > 0.6) {
         this.layers[3].entities?.push(
           new YogaEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 80)
-        )
+        );
       } else {
         this.layers[3].entities?.push(
           new CactusEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 92)
         );
       }
+    }
+
+    if (Math.random() < 0.03) {
+      const x = this.columns[18].columnId * 100;
+      const y = Math.min(400, 1200 - Math.max(...this.columns.map(column => column.height)) * 100 - 190);
+      this.layers[3].entities?.push(
+        new BeeEntity(x, 400)
+      );
+    }
+
+    if (Math.random() < 0.04) {
+      const x = this.columns[18].columnId * 100;
+      const y = 400;
+      this.layers[3].entities?.push(
+        new VitaminPillEntity(x, y)
+      );
     }
   }
 }

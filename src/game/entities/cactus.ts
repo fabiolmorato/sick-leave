@@ -18,7 +18,8 @@ export class CactusEntity extends Entity {
   effect () {
     return {
       type: "health",
-      amount: -3
+      amount: -3,
+      text: "Stepped on a cactus! -3"
     };
   }
 }
