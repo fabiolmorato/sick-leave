@@ -1,0 +1,75 @@
+* {
+  box-sizing: border-box;
+}
+
+body {
+  background-color: rgb(40, 213, 81);
+}
+
+.app {
+  display: flex;
+  min-height: 100vh;
+  align-items: center;
+}
+
+.console {
+  padding: 1rem;
+  width: 100%;
+  max-width: calc(600px + 2rem);
+  margin: 0 auto;
+  border: 1px solid rgba(0, 0, 0, .3);
+  border-radius: 0.25rem;
+  background-color: rgba(255, 255, 255, .1);
+  box-shadow: 0.25rem 0.25rem 0 rgba(0, 0, 0, .3);
+}
+
+.flex {
+  display: flex;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+button {
+  width: 36px;
+  height: 36px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 100%;
+  border: 0;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+  box-shadow: 0.125rem 0.125rem 0 rgba(0, 0, 0, .3);
+}
+
+canvas {
+  margin-bottom: 1rem;
+  border-radius: 0.25rem;
+  border: 1px solid rgba(0, 0, 0, .3);
+}
+
+.controls {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem;
+}
+
+.controls .direction {
+  width: 18%;
+}
+
+.controls .state, .controls .actions {
+  gap: 1rem;
+}

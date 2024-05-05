@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sick Leave</title>
+    <meta name="author" content="Fábio Lino Morato" />
+    <meta name="description" content="University of London's Introdruction to Programming I's Game Project - Midterm" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Anonymous+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/reset.css" />
+    <link rel="stylesheet" href="assets/css/style.css" />
+  </head>
+  <body>
+    <section class="app">
+      <section class="console">
+        <canvas id="game" width="600" height="450" class="screen"></canvas>
+        <section class="controls">
+          <section class="direction">
+            <section class="flex justify-center">
+              <button id="game-up-button">
+                <ion-icon name="chevron-up-outline"></ion-icon>
+              </button>
+            </section>
+
+            <section class="flex items-center justify-between">
+              <button id="game-left-button">
+                <ion-icon name="chevron-back-outline"></ion-icon>
+              </button>
+  
+              <button id="game-right-button">
+                <ion-icon name="chevron-forward-outline"></ion-icon>
+              </button>
+            </section>
+
+            <section class="flex justify-center">
+              <button id="game-down-button">
+                <ion-icon name="chevron-down-outline"></ion-icon>
+              </button>
+            </section>
+          </section>
+
+          <section class="state flex">
+            <section class="flex justify-center">
+              <button id="game-back-button">
+                <ion-icon name="return-up-back-outline"></ion-icon>
+              </button>
+            </section>
+
+            <section class="flex justify-center">
+              <button id="game-start-button">
+                <ion-icon name="play-outline"></ion-icon>
+              </button>
+            </section>
+          </section>
+
+          <section class="actions flex">
+            <section class="flex justify-center">
+              <button id="game-b-button">
+                <ion-icon name="triangle-outline"></ion-icon>
+              </button>
+            </section>
+
+            <section class="flex justify-center">
+              <button id="game-a-button">
+                <ion-icon name="square-outline"></ion-icon>
+              </button>
+            </section>
+          </section>
+        </section>
+      </section>
+    </section>
+
+    <script type="module">
+      import { Game } from "./dist/game/index.js";
+      const canvas = document.getElementById("game");
+      const game = new Game(canvas);
+      game.init();
+    </script>
+
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  </body>
+</html>
