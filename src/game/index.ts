@@ -23,6 +23,7 @@ import { PreGameScene } from "./scenes/pre-game-scene.js";
 import { GameScene } from "./scenes/game-scene.js";
 
 import { logo } from "./images/logo.js";
+import { SidePainRenderer } from "./renderers/side-pain-renderer.js";
 
 export class Game {
   private engine: GameEngine;
@@ -74,6 +75,7 @@ export class Game {
     this.engine.addEntityRenderer("yoga", new YogaRenderer());
     this.engine.addEntityRenderer("bee", new BeeRenderer());
     this.engine.addEntityRenderer("vitamin-pill", new VitaminPillRenderer());
+    this.engine.addEntityRenderer("side-pain", new SidePainRenderer());
 
     const loadingScene = new LoadingScene();
     const startMenuScene = new StartMenuScene();

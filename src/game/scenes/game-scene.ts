@@ -7,6 +7,7 @@ import { CactusEntity } from "../entities/cactus.js";
 import { YogaEntity } from "../entities/yoga.js";
 import { BeeEntity } from "../entities/bee.js";
 import { VitaminPillEntity } from "../entities/vitamin-pill.js";
+import { SidePainEntity } from "../entities/side-pain.js";
 
 interface IColumn {
   columnId: number;
@@ -307,9 +308,15 @@ export class GameScene extends Scene {
           new YogaEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 80)
         );
       } else {
-        this.layers[3].entities?.push(
-          new CactusEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 92)
-        );
+        if (Math.random() < 0.9) {
+          this.layers[3].entities?.push(
+            new CactusEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 92)
+          );
+        } else {
+          this.layers[3].entities?.push(
+            new SidePainEntity((columnId - 1) * 100 + 20, 1200 - height * 100 - 77)
+          );
+        }
       }
     }
 
